@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  GoogleLogin,
-  useGoogleOneTapLogin,
-  CredentialResponse,
-  googleLogout,
-} from "@react-oauth/google";
+import { googleLogout } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { Button } from "./components/ui/button";
+import GoogleAuth from "./components/GoogleAuth";
+import TokenViewer from "./components/TokenViewer";
+import JwtDecoder from "./components/JwtDecoder";
+import Footer from "./components/Footer";
 
-interface DecodedToken {
+export interface DecodedToken {
   exp: number;
   email?: string;
   name?: string;
@@ -19,34 +17,21 @@ const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<DecodedToken | null>(null);
 
-  const handleCredentialResponse = useCallback(
-    (credentialResponse: CredentialResponse) => {
-      if (credentialResponse.credential) {
-        setToken(credentialResponse.credential);
-        try {
-          const decoded: DecodedToken = jwtDecode(
-            credentialResponse.credential
-          );
-          setUser(decoded);
-        } catch (err) {
-          console.error("Failed to decode token", err);
-        }
+  const handleCredentialResponse = useCallback((credential: string) => {
+    if (credential) {
+      setToken(credential);
+      try {
+        const decoded: DecodedToken = jwtDecode(credential);
+        setUser(decoded);
+      } catch (err) {
+        console.error("Failed to decode token", err);
       }
-    },
-    []
-  );
+    }
+  }, []);
 
-  useGoogleOneTapLogin({
-    onSuccess: handleCredentialResponse,
-    onError: () => console.log("One Tap Login Failed"),
-    auto_select: true,
-  });
-
-  const handleManualSignIn = (credentialResponse: CredentialResponse) => {
-    handleCredentialResponse(credentialResponse);
-  };
-
+  // Setup silent token refresh 5 minutes before expiration.
   useEffect(() => {
+    console.log("Setting up token refresh timer", token);
     if (token) {
       let decoded: DecodedToken;
       try {
@@ -55,13 +40,11 @@ const App: React.FC = () => {
         console.error("Error decoding token:", err);
         return;
       }
-      const expTime = decoded.exp * 1000; // Convert expiration to milliseconds
+      const expTime = decoded.exp * 1000;
       const now = Date.now();
-      // Set the refresh to occur 5 minutes before expiration
       const refreshDelay = expTime - now - 5 * 60 * 1000;
       const timeout = refreshDelay > 0 ? refreshDelay : 0;
       const timer = setTimeout(() => {
-        // Trigger the silent prompt to refresh the token.
         if (
           window.google &&
           window.google.accounts &&
@@ -76,53 +59,35 @@ const App: React.FC = () => {
     }
   }, [token]);
 
-  // Logout handler: call googleLogout and clear state
   const handleLogout = () => {
     googleLogout();
     setToken(null);
     setUser(null);
   };
 
-  const handleCopy = () => {
-    if (token) {
-      navigator.clipboard
-        .writeText(token)
-        .then(() => alert("Token copied to clipboard!"))
-        .catch((err) => console.error("Failed to copy token:", err));
-    }
-  };
-
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-      <h1>Google Auth Demo</h1>
-      {token ? (
-        <>
-          <h2>Welcome, {user?.name || user?.email}</h2>
-          <p>
-            <strong>Latest Token:</strong>
-          </p>
-          <textarea
-            readOnly
-            rows={10}
-            style={{ width: "100%", marginBottom: "1rem" }}
-            value={token}
-          />
-          <Button onClick={handleCopy} style={{ marginRight: "1rem" }}>
-            Copy Token
-          </Button>
-          <Button onClick={handleLogout}>Logout</Button>
-        </>
-      ) : (
-        <>
-          <p>Please sign in with Google:</p>
-          <GoogleLogin
-            onSuccess={handleManualSignIn}
-            onError={() => console.log("Manual Login Failed")}
-            useOneTap={false}
-            auto_select
-          />
-        </>
-      )}
+    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
+      <div className="flex-grow container mx-auto p-4">
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
+          Google Auth Demo
+        </h1>
+        {token ? (
+          <>
+            <div className="text-center mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                Welcome, {user?.name || user?.email}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <TokenViewer token={token} onLogout={handleLogout} />
+              <JwtDecoder token={token} />
+            </div>
+          </>
+        ) : (
+          <GoogleAuth onSuccess={handleCredentialResponse} />
+        )}
+      </div>
+      <Footer />
     </div>
   );
 };
