@@ -6,6 +6,8 @@ import TokenViewer from "./components/TokenViewer";
 import JwtDecoder from "./components/JwtDecoder";
 import Footer from "./components/Footer";
 import AboutSection from "./components/AboutSection";
+import { LogOut } from "lucide-react";
+import { Button } from "./components/ui/button";
 
 export interface DecodedToken {
   exp: number;
@@ -30,9 +32,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Setup silent token refresh 5 minutes before expiration.
   useEffect(() => {
-    console.log("Setting up token refresh timer", token);
     if (token) {
       let decoded: DecodedToken;
       try {
@@ -41,22 +41,23 @@ const App: React.FC = () => {
         console.error("Error decoding token:", err);
         return;
       }
+
       const expTime = decoded.exp * 1000;
       const now = Date.now();
       const refreshDelay = expTime - now - 5 * 60 * 1000;
       const timeout = refreshDelay > 0 ? refreshDelay : 0;
+
       const timer = setTimeout(() => {
-        if (
-          window.google &&
-          window.google.accounts &&
-          window.google.accounts.id
-        ) {
+        if (window.google?.accounts?.id) {
           window.google.accounts.id.prompt((notification: unknown) => {
             console.log("Silent prompt notification:", notification);
           });
         }
       }, timeout);
-      return () => clearTimeout(timer);
+
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, [token]);
 
@@ -67,11 +68,21 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
+    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark relative">
+      {token && (
+        <div className="absolute top-4 right-4">
+          <Button variant="destructive" onClick={handleLogout}>
+            <LogOut className="mr-1 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
+      )}
+
       <div className="flex-grow container mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
           Google Id Token Retriever
         </h1>
+
         {token ? (
           <>
             <div className="text-center mb-4">
@@ -80,14 +91,13 @@ const App: React.FC = () => {
               </h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <TokenViewer token={token} onLogout={handleLogout} />
+              <TokenViewer token={token} />
               <JwtDecoder token={token} />
             </div>
           </>
         ) : (
           <>
             <GoogleAuth onSuccess={handleCredentialResponse} />
-
             <AboutSection />
           </>
         )}

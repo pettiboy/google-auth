@@ -1,4 +1,4 @@
-import { Copy, LogOut } from "lucide-react";
+import { Copy,  } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -11,10 +11,9 @@ import { useToast } from "@/hooks/use-toast";
 
 interface TokenViewerProps {
   token: string;
-  onLogout: () => void;
 }
 
-const TokenViewer: React.FC<TokenViewerProps> = ({ token, onLogout }) => {
+const TokenViewer: React.FC<TokenViewerProps> = ({ token }) => {
   const { toast } = useToast();
 
   const handleCopy = () => {
@@ -46,12 +45,6 @@ const TokenViewer: React.FC<TokenViewerProps> = ({ token, onLogout }) => {
             className="overflow-auto"
           />
         </CardContent>
-        <div className="flex justify-end p-4">
-          <Button variant="destructive" onClick={onLogout}>
-            <LogOut className="mr-1 h-4 w-4" />
-            Logout
-          </Button>
-        </div>
       </Card>
     </>
   );
