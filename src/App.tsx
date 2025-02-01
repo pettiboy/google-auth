@@ -6,6 +6,7 @@ import {
   googleLogout,
 } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { Button } from "./components/ui/button";
 
 interface DecodedToken {
   exp: number;
@@ -106,10 +107,10 @@ const App: React.FC = () => {
             style={{ width: "100%", marginBottom: "1rem" }}
             value={token}
           />
-          <button onClick={handleCopy} style={{ marginRight: "1rem" }}>
+          <Button onClick={handleCopy} style={{ marginRight: "1rem" }}>
             Copy Token
-          </button>
-          <button onClick={handleLogout}>Logout</button>
+          </Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </>
       ) : (
         <>
