@@ -1,32 +1,55 @@
 // tailwind.config.js
 module.exports = {
-  darkMode: "class", // Enable dark mode via a class on the <html> or <body>
+  darkMode: "class", // Enables dark mode toggling with a 'dark' class
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#3B82F6", // blue-500
-          light: "#60A5FA", // blue-400
-          dark: "#2563EB", // blue-600
+          DEFAULT: "#2563EB", // Modern blue with good contrast
+          light: "#3B82F6", // Softer blue for hover states
+          dark: "#1E40AF", // Deep blue for dark mode
         },
         secondary: {
-          DEFAULT: "#EF4444", // red-500
-          light: "#F87171", // red-400
-          dark: "#DC2626", // red-600
+          DEFAULT: "#9333EA", // Vibrant purple for highlights
+          light: "#A855F7", // Lighter purple
+          dark: "#7E22CE", // Darker purple for dark mode
         },
         accent: {
-          DEFAULT: "#10B981", // green-500
-          light: "#34D399", // green-400
-          dark: "#059669", // green-600
+          DEFAULT: "#14B8A6", // Teal for modern accents
+          light: "#2DD4BF", // Lighter teal
+          dark: "#0F766E", // Dark teal for dark mode
+        },
+        warning: {
+          DEFAULT: "#F59E0B", // Golden yellow for warnings
+          light: "#FBBF24",
+          dark: "#D97706",
+        },
+        error: {
+          DEFAULT: "#DC2626", // Deep red for errors
+          light: "#EF4444",
+          dark: "#B91C1C",
+        },
+        success: {
+          DEFAULT: "#22C55E", // Brighter green for success notifications
+          light: "#4ADE80",
+          dark: "#16A34A",
         },
         background: {
-          light: "#F9FAFB", // gray-50
-          dark: "#1F2937", // gray-800
+          light: "#F8FAFC", // Soft gray background (less strain on eyes)
+          dark: "#1E293B", // **Dark navy-gray** instead of pitch black
         },
         card: {
-          light: "#FFFFFF",
-          dark: "#374151", // a darker gray
+          light: "#FFFFFF", // Classic white for light mode
+          dark: "#2D3748", // **Soft dark gray instead of pitch black**
+        },
+        border: {
+          light: "#E2E8F0", // Subtle light gray
+          dark: "#4A5568", // **Medium gray instead of stark black**
+        },
+        text: {
+          light: "#1E293B", // Dark navy for **better contrast**
+          dark: "#E2E8F0", // **Softer white** for better readability
         },
       },
     },

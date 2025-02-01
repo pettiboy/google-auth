@@ -5,6 +5,7 @@ import GoogleAuth from "./components/GoogleAuth";
 import TokenViewer from "./components/TokenViewer";
 import JwtDecoder from "./components/JwtDecoder";
 import Footer from "./components/Footer";
+import AboutSection from "./components/AboutSection";
 
 export interface DecodedToken {
   exp: number;
@@ -69,7 +70,7 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
       <div className="flex-grow container mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
-          Google Auth Demo
+          Google Id Token Retriever
         </h1>
         {token ? (
           <>
@@ -84,7 +85,11 @@ const App: React.FC = () => {
             </div>
           </>
         ) : (
-          <GoogleAuth onSuccess={handleCredentialResponse} />
+          <>
+            <GoogleAuth onSuccess={handleCredentialResponse} />
+
+            <AboutSection />
+          </>
         )}
       </div>
       <Footer />

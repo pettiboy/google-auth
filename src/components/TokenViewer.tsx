@@ -24,14 +24,14 @@ const TokenViewer: React.FC<TokenViewerProps> = ({ token, onLogout }) => {
         toast({ title: "Failed to copy token", description: err })
       )
       .finally(() => {
-        toast({ title: "Token copied to clipboard!" });
+        toast({ title: "Token copied to clipboard!", color: "success" });
       });
   };
 
   return (
     <>
       <Card className="h-full flex flex-col">
-        <CardHeader className="flex items-center justify-between">
+        <CardHeader className="flex items-center flex-row justify-between">
           <CardTitle className="text-lg font-semibold">Raw JWT Token</CardTitle>
           <Button onClick={handleCopy} className="ml-2">
             <Copy className="mr-1 h-4 w-4" />
