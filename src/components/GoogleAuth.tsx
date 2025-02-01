@@ -32,7 +32,9 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ onSuccess }) => {
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4">
-      <p className="text-lg text-gray-900 dark:text-gray-100">Please sign in with Google:</p>
+      <p className="text-lg text-gray-900 dark:text-gray-100">
+        Sign in with Google
+      </p>
       <GoogleLogin
         onSuccess={handleManualSignIn}
         onError={() => console.log("Manual Login Failed")}

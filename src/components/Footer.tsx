@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Github, Moon, Sun } from "lucide-react";
-import { Switch } from "@/components/ui/switch"; // shadcn Switch
+import { Switch } from "@/components/ui/switch";
 
 const Footer: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
 
         {/* GitHub Link */}
         <a
-          href="https://github.com/yourusername/yourrepository"
+          href="https://github.com/pettiboy/google-auth"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center space-x-2 hover:underline"

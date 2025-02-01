@@ -80,7 +80,7 @@ const App: React.FC = () => {
 
       <div className="flex-grow container mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
-          Google Id Token Retriever
+          Generate Google Id Token
         </h1>
 
         {token ? (
