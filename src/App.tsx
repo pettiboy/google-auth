@@ -3,6 +3,7 @@ import {
   GoogleLogin,
   useGoogleOneTapLogin,
   CredentialResponse,
+  googleLogout,
 } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
@@ -45,7 +46,6 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    // LLM code - will have to review this code
     if (token) {
       let decoded: DecodedToken;
       try {
@@ -75,6 +75,13 @@ const App: React.FC = () => {
     }
   }, [token]);
 
+  // Logout handler: call googleLogout and clear state
+  const handleLogout = () => {
+    googleLogout();
+    setToken(null);
+    setUser(null);
+  };
+
   const handleCopy = () => {
     if (token) {
       navigator.clipboard
@@ -99,7 +106,10 @@ const App: React.FC = () => {
             style={{ width: "100%", marginBottom: "1rem" }}
             value={token}
           />
-          <button onClick={handleCopy}>Copy Token</button>
+          <button onClick={handleCopy} style={{ marginRight: "1rem" }}>
+            Copy Token
+          </button>
+          <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>
